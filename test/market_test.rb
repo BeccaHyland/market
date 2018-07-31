@@ -19,7 +19,6 @@ class MarketTest < Minitest::Test
 
   def test_it_exists
     assert_instance_of Market, @m
-
   end
 
   def test_it_has_a_name
@@ -72,6 +71,35 @@ class MarketTest < Minitest::Test
 
     expected = ({"Peaches"=>100, "Tomatoes"=>7, "Banana Nice Cream"=>50, "Peach-Raspberry Nice Cream"=>25})
     assert_equal expected, @m.total_inventory
+  end
+
+  def test_it_can_sell_item_if_item_in_stock_for_a_vendor
+    @m.add_vendor(@vendor_1)
+    @m.add_vendor(@vendor_2)
+    @m.add_vendor(@vendor_3)
+
+    refute market.sell("Peaches", 200)
+    refute market.sell("Onions", 1)
+    assert market.sell("Banana Nice Cream", 5)
+  end
+
+  def test_when_selling_items_it_reduces_vendor_stock
+    @m.add_vendor(@vendor_1)
+    @m.add_vendor(@vendor_2)
+    @m.add_vendor(@vendor_3)
+    market.sell("Banana Nice Cream", 5)
+
+    assert_equal 45, @vendor_2.check_stock("Banana Nice Cream")
+  end
+
+  def test_its_vendors_sell_in_the_order_they_were_added_to_market
+    @m.add_vendor(@vendor_1)
+    @m.add_vendor(@vendor_2)
+    @m.add_vendor(@vendor_3)
+    market.sell("Peaches", 40)
+
+    assert_equal 0, @vendor_1.check_stock("Peaches")
+    assert_equal 60, @endor_3.check_stock("Peaches")
   end
 
 end
