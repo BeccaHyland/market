@@ -99,7 +99,7 @@ class MarketTest < Minitest::Test
     @m.sell("Peaches", 40)
 
     assert_equal 0, @vendor_1.check_stock("Peaches")
-    assert_equal 60, @endor_3.check_stock("Peaches")
+    assert_equal 60, @vendor_3.check_stock("Peaches")
   end
 
 end

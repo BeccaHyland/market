@@ -45,9 +45,26 @@ class Market
   end
 
   def sell(item, amount)
-
-
+    unless !sellable?(item, amount)
+      amount_to_sell = amount
+      until amount_to_sell == 0
+        vendor = get_vendor_with_item(item)
+        if vendor.check_stock(item) < amount
+          amount_to_sell -= vendor.inventory[item]
+          vendor.inventory[item] = 0
+        else
+          vendor.inventory[item] -= amount_to_sell
+          amount_to_sell = 0
+        end
+      end
+    end
     sellable?(item, amount)
+  end
+
+  def get_vendor_with_item(item)
+    @vendors.find do |vendor|
+      vendor.check_stock(item) != 0
+    end
   end
 
   def sellable?(item, amount)
