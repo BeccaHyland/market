@@ -34,13 +34,14 @@ class Market
     items.uniq.sort
   end
 
-  # def sorted_item_list
-  #   #iterate over each vendor's inventory, shovel into list
-  #   sorted = []
-  #   @vendors.each do |vendor|
-  #     inventory = vendor.inventory
-  #     inventory.each do |item, amount|
-  #       sorted[]
-  #   end
-  # end
+#another way to do this might be to call the sorted item list and assign its elements as keys
+  def total_inventory
+    sorted = Hash.new(0)
+    @vendors.each do |vendor|
+      vendor.inventory.each do |item, amount|
+        sorted[item] += amount
+      end
+    end
+    sorted
+  end
 end
