@@ -34,14 +34,41 @@ class Market
     items.uniq.sort
   end
 
-#another way to do this might be to call the sorted item list and assign its elements as keys
   def total_inventory
-    sorted = Hash.new(0)
+    total = Hash.new(0)
     @vendors.each do |vendor|
       vendor.inventory.each do |item, amount|
-        sorted[item] += amount
+        total[item] += amount
       end
     end
-    sorted
+    total
   end
+
+  def sell(item, amount)
+    unless !sellable?(item, amount)
+      amount_to_sell = amount
+      until amount_to_sell == 0
+        vendor = get_vendor_with_item(item)
+        if vendor.check_stock(item) < amount
+          amount_to_sell -= vendor.inventory[item]
+          vendor.inventory[item] = 0
+        else
+          vendor.inventory[item] -= amount_to_sell
+          amount_to_sell = 0
+        end
+      end
+    end
+    sellable?(item, amount)
+  end
+
+  def get_vendor_with_item(item)
+    @vendors.find do |vendor|
+      vendor.check_stock(item) != 0
+    end
+  end
+
+  def sellable?(item, amount)
+    total_inventory[item] >= amount
+  end
+
 end
