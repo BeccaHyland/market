@@ -23,4 +23,24 @@ class Market
       vendor.inventory.has_key?(item)
     end
   end
+
+  def sorted_item_list
+    items = []
+    @vendors.each do |vendor|
+      vendor.inventory.each do |item, amount|
+        items << item
+      end
+    end
+    items.uniq.sort
+  end
+
+  # def sorted_item_list
+  #   #iterate over each vendor's inventory, shovel into list
+  #   sorted = []
+  #   @vendors.each do |vendor|
+  #     inventory = vendor.inventory
+  #     inventory.each do |item, amount|
+  #       sorted[]
+  #   end
+  # end
 end
